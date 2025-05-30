@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cửa hàng mua sắm sách RBook</title>
+    <title>Cửa hàng mua sắm quần áo LUXURY</title>
     <link rel="stylesheet" href="view/css/css.css">
 </head>
 <body>
     <div class="boxcenter">
         <div class="row mb header">
-            <h1>Cửa hàng mua sắm sách RBook</h1>
+            <h1>Cửa hàng mua sắm quần áo LUXURY</h1>
         </div>
         <div class="row mb menu">
             <ul>
