@@ -1,7 +1,9 @@
 <?php
-// Thư viện PDO
+/**
+ * Mở kết nối đến CSDL sử dụng PDO
+ */
 function pdo_get_connection(){
-    $dburl = "mysql:host=localhost;dbname=duan1;charset=utf8"; // sửa "duan1" thành tên CSDL thật nếu cần
+    $dburl = "mysql:host=localhost;dbname=nhom3_duan1;charset=utf8";
     $username = 'root';
     $password = '';
 
@@ -9,8 +11,6 @@ function pdo_get_connection(){
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $conn;
 }
-
-
 /**
  * Thực thi câu lệnh sql thao tác dữ liệu (INSERT, UPDATE, DELETE)
  * @param string $sql câu lệnh sql
@@ -31,7 +31,6 @@ function pdo_execute($sql){
         unset($conn);
     }
 }
-
 /**
  * Thực thi câu lệnh sql truy vấn dữ liệu (SELECT)
  * @param string $sql câu lệnh sql
@@ -82,7 +81,7 @@ function pdo_query_one($sql){
  * Thực thi câu lệnh sql truy vấn một giá trị
  * @param string $sql câu lệnh sql
  * @param array $args mảng giá trị cung cấp cho các tham số của $sql
- * @return giá trị
+ * @return array giá trị
  * @throws PDOException lỗi thực thi câu lệnh
  */
 function pdo_query_value($sql){
@@ -101,5 +100,3 @@ function pdo_query_value($sql){
         unset($conn);
     }
 }
-
-?>
