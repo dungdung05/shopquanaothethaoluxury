@@ -62,4 +62,14 @@
         }
         pdo_execute($sql);
     }
+    function getAllSanpham() {
+    $sql = "SELECT * FROM sanpham ORDER BY id DESC";
+    return pdo_query($sql);
+    }
+
+    function searchSanpham($keyword) {
+    $sql = "SELECT * FROM sanpham WHERE name LIKE ?";
+    return pdo_query($sql, ['%' . $keyword . '%']);
+    }
+
 ?>
