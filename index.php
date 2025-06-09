@@ -1,169 +1,121 @@
 <?php
-    session_start();
-    include "model/pdo.php";
-    include "model/sanpham.php";
-    include "model/danhmuc.php";
-    include "model/taikhoan.php";
-    include "view/header.php";
-    include "global.php";
-    include "model/binhluan.php";
-
-    
+ob_start();
+session_start();
 
 
-    $spnew= loadall_sanpham_home();
-    $dsdm=loadall_danhmuc();
-    $dstop10=loadall_sanpham_top10();
+require_once "models/pdo_library.php";
+require_once "models/BaseModel.php";
+require_once "models/ProductModel.php";
+require_once "models/CategoryModel.php";
+require_once "models/CustomerModel.php";
+require_once "models/CommentModel.php";
+require_once "models/CartModel.php";
+require_once "models/OrderModel.php";
+require_once "models/PostModel.php";
+require_once "models/AddressModel.php";
+define('BASE_URL', 'index.php?url=');
+define('URL_ORDER', 'http://localhost/BTL_BanQuanAo/don-hang');
 
-    if(isset($_GET['act'])&&($_GET['act']!="")){
-        $act=$_GET['act'];
-        switch($act){
-        case 'sanpham' :
-            if(isset($_POST['kyw'])&&($_POST['kyw']!="")){
-                $kyw=$_POST['kyw'];
-            }else{
-                $kyw="";
-            }
-            if(isset($_GET['iddm'])&&($_GET['iddm']>0)){
-                $iddm=$_GET['iddm'];
-                
-            }else{
-                $iddm=0;
-            }
-            $dssp=loadall_sanpham($kyw,$iddm);
-            $tendm=load_ten_dm($iddm);
-            include "view/sanpham/sanpham.php";
+// Các thành phần có thể sử dụng lại
+require_once "components/head.php";
+require_once "components/header.php";
+
+
+if (!isset($_GET['url'])) {
+    require_once "views/home.php";
+} else {
+    switch ($_GET['url']) {
+            // Trang chủ
+        case 'trang-chu':
+            require_once "views/home.php";
             break;
-             
-         case 'post_comment':
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $idsp = $_GET['idsp'] ?? 0;
-        $noidung = trim($_POST['noidung']);
-        $iduser = $_SESSION['user']['id'] ?? 0;
-
-        if (!empty($noidung) && $idsp > 0 && $iduser > 0) {
-            insert_binhluan($idsp, $iduser, $noidung);
-        }
-    }
-    header("Location: index.php?act=sanphamct&idsp=$idsp");
-    exit;
-    break;
-
-
-          case 'sanphamct':
-    if (isset($_GET['idsp']) && ($_GET['idsp'] > 0)) {
-        $id = $_GET['idsp'];
-
-        // Xử lý gửi bình luận (nếu có)
-        if (isset($_POST['guibinhluan']) && ($_POST['guibinhluan'])) {
-            $noidung = $_POST['noidung'];
-            $iduser = $_SESSION['user']['id']; 
-            insert_binhluan($id, $iduser, $noidung);
-            header("Location: index.php?act=sanphamct&idsp=" . $id); 
-            exit();
-        }
-
-        // Load dữ liệu sản phẩm
-        $onesp = loadone_sanpham($id);
-        extract($onesp);
-
-        $sp_cung_loai = load_sanpham_cungloai($id, $iddm);
-
-        // Load bình luận
-        $dsbl = load_binhluan_theo_sp($id);
-        $comments = $dsbl;  // Gán để dùng trong view
-
-        include "view/sanpham/sanphamct.php";
-    } else {
-        include "view/home.php";
-    }
-    break;
-
-
-        case 'gioithieu' :
-            include "view/gioithieu.php";
+        case 'cua-hang':
+            require_once "views/shop.php";
             break;
-        case 'dangky' :
-            if(isset($_POST['dangky'])&&($_POST['dangky'])){
-                $email=$_POST['email'];
-                $user=$_POST['user'];
-                $pass=$_POST['pass'];
-                $address=$_POST['address'];
-                if(($_POST['tel']!="")&&($_POST['tel'])>0){
-                    $tel=$_POST['tel'];
-                }else{
-                    $tel=0;
-                }
-                insert_taikhoan($user,$pass,$email,$address,$tel);
-                $thongbao="Đã đăng kí thành công! Vui lòng đăng nhập để thực hiện chức năng.";
-            }
-            include "view/taikhoan/dangky.php";
+            // Chi tiết sản phẩm
+        case 'chitietsanpham':
+            require_once "views/productdetail.php";
             break;
-        case 'dangnhap' :
-            if(isset($_POST['dangnhap'])&&($_POST['dangnhap'])){
-                $user=$_POST['user'];
-                $pass=$_POST['pass'];
-                $checkuser=checkuser($user,$pass);
-                if(is_array($checkuser)){
-                    $_SESSION['user']=$checkuser;
-                    header("location:index.php");
-                }else{
-                    $thongbao="Tài khoản không tồn tại. Vui lòng đăng ký mới!";
-                }
-                
-            }
-            include "view/taikhoan/dangky.php";
+            // Danh mục sản phẩm
+        case 'danh-muc-san-pham':
+            require_once "views/shop-by-category.php";
             break;
-        case 'edit_taikhoan' :
-            if(isset($_POST['capnhat'])&&($_POST['capnhat'])){
-                $email=$_POST['email'];
-                $user=$_POST['user'];
-                $pass=$_POST['pass'];
-                $address=$_POST['address'];
-                $id=$_POST['id'];
-                if(($_POST['tel']!="")&&(is_numeric($_POST['tel']))){
-                    $tel=$_POST['tel'];
-                }else{
-                    $tel=0;
-                }
-                update_taikhoan($id,$user,$pass,$email,$address,$tel);
-                $_SESSION['user']=checkuser($user,$pass);
-                header('location:index.php?act=edit_taikhoan');
-            }
-            include "view/taikhoan/edit_taikhoan.php";
+            // Liên hệ
+        case 'lien-he':
+            require_once "views/contact.php";
             break;
-        case 'quenmk' :
-            if(isset($_POST['guiemail'])&&($_POST['guiemail'])){
-                $email=$_POST['email'];
-                $checkemail=checkemail($email);
-                if(is_array($checkemail)){
-                    $thongbao="Mật khẩu của bạn là:".$checkemail['pass'];
-                }else{
-                    $thongbao="Email này không tồn tại!";
-                }
-            }
-            include "view/taikhoan/quenmk.php";
+            // Giỏ hàng
+        case 'gio-hang':
+            require_once "views/giohang.php";
             break;
-     
-        case 'thoat':
-            session_unset();
-            header("location:index.php");
+            // Thanh toán
+        case 'thanh-toan':
+            require_once "views/thanhtoan1.php";
             break;
-        case 'lienhe' :
-            include "view/lienhe.php";
+            // Nếu ấn vào "Sửa" thì sang trag này, cho phép sửa thông tin đặt hàng
+        case 'thanh-toan-2':
+            require_once "views/thanhtoan2.php";
             break;
-        case 'gopy' :
-            include "view/gopy.php";
+        case 'cam-on':
+            require_once "views/thanks.php";
             break;
-        case 'hoidap' :
-            include "view/hoidap.php";
+            // Đơn hàng
+        case 'don-hang':
+            require_once "views/my-order.php";
             break;
+        case 'chi-tiet-don-hang':
+            require_once "views/my-orderdetails.php";
+            break;
+
+            // User
+        case 'dang-nhap':
+            require_once "views/user/login.php";
+            break;
+        case 'dang-ky':
+            require_once "views/user/register.php";
+            break;
+        case 'dang-xuat':
+            unset($_SESSION['user']);
+            header("Location: index.php");
+            break;
+        case 'thong-tin-tai-khoan':
+            require_once "views/user/user-infor.php";
+            break;
+        case 'ho-so':
+            require_once "views/user/edit-profile.php";
+            break;
+        case 'them-dia-chi':
+            require_once "views/user/add-address.php";
+            break;
+        case 'doi-mat-khau':
+            require_once "views/user/change-password.php";
+            break;
+        case 'quen-mat-khau':
+            require_once "views/user/forgot-password.php";
+            break;
+        case 'khoi-phuc-mat-khau':
+            require_once "views/user/password-recovery.php";
+            break;
+            // Đổi trả
+        case 'doi-tra':
+            require_once "view/doi-tra.php";
+            break;
+
+
+            //Tìm kiếm
+        case 'tim-kiem':
+            require_once "views/search.php";
+            break;
+            // Không tìm thấy/Chưa tạo trang đó
         default:
-            include "view/home.php";
+            require_once "views/not-page.php";
             break;
     }
-    }else{
-        include "view/home.php";
-    }
-    include "view/footer.php";
+}
+require_once "components/footer.php";
+
+
+
+ob_end_flush();
 ?>
+<br>
