@@ -1,121 +1,172 @@
 <?php
-ob_start();
-session_start();
-
-
-require_once "models/pdo_library.php";
-require_once "models/BaseModel.php";
-require_once "models/ProductModel.php";
-require_once "models/CategoryModel.php";
-require_once "models/CustomerModel.php";
-require_once "models/CommentModel.php";
-require_once "models/CartModel.php";
-require_once "models/OrderModel.php";
-require_once "models/PostModel.php";
-require_once "models/AddressModel.php";
-define('BASE_URL', 'index.php?url=');
-define('URL_ORDER', 'http://localhost/BTL_BanQuanAo/don-hang');
-
-// Các thành phần có thể sử dụng lại
-require_once "components/head.php";
-require_once "components/header.php";
-
-
-if (!isset($_GET['url'])) {
-    require_once "views/home.php";
-} else {
-    switch ($_GET['url']) {
-            // Trang chủ
-        case 'trang-chu':
-            require_once "views/home.php";
-            break;
-        case 'cua-hang':
-            require_once "views/shop.php";
-            break;
-            // Chi tiết sản phẩm
-        case 'chitietsanpham':
-            require_once "views/productdetail.php";
-            break;
-            // Danh mục sản phẩm
-        case 'danh-muc-san-pham':
-            require_once "views/shop-by-category.php";
-            break;
-            // Liên hệ
-        case 'lien-he':
-            require_once "views/contact.php";
-            break;
-            // Giỏ hàng
-        case 'gio-hang':
-            require_once "views/giohang.php";
-            break;
-            // Thanh toán
-        case 'thanh-toan':
-            require_once "views/thanhtoan1.php";
-            break;
-            // Nếu ấn vào "Sửa" thì sang trag này, cho phép sửa thông tin đặt hàng
-        case 'thanh-toan-2':
-            require_once "views/thanhtoan2.php";
-            break;
-        case 'cam-on':
-            require_once "views/thanks.php";
-            break;
-            // Đơn hàng
-        case 'don-hang':
-            require_once "views/my-order.php";
-            break;
-        case 'chi-tiet-don-hang':
-            require_once "views/my-orderdetails.php";
-            break;
-
-            // User
-        case 'dang-nhap':
-            require_once "views/user/login.php";
-            break;
-        case 'dang-ky':
-            require_once "views/user/register.php";
-            break;
-        case 'dang-xuat':
-            unset($_SESSION['user']);
-            header("Location: index.php");
-            break;
-        case 'thong-tin-tai-khoan':
-            require_once "views/user/user-infor.php";
-            break;
-        case 'ho-so':
-            require_once "views/user/edit-profile.php";
-            break;
-        case 'them-dia-chi':
-            require_once "views/user/add-address.php";
-            break;
-        case 'doi-mat-khau':
-            require_once "views/user/change-password.php";
-            break;
-        case 'quen-mat-khau':
-            require_once "views/user/forgot-password.php";
-            break;
-        case 'khoi-phuc-mat-khau':
-            require_once "views/user/password-recovery.php";
-            break;
-            // Đổi trả
-        case 'doi-tra':
-            require_once "view/doi-tra.php";
-            break;
-
-
-            //Tìm kiếm
-        case 'tim-kiem':
-            require_once "views/search.php";
-            break;
-            // Không tìm thấy/Chưa tạo trang đó
-        default:
-            require_once "views/not-page.php";
-            break;
+    ob_start();
+    session_start();    
+    if(!isset($_SESSION['user_admin'])) {
+        header("Location: login.php");
+        exit();
     }
-}
-require_once "components/footer.php";
+    require_once "models_admin/pdo_library.php";
+    require_once "models_admin/BaseModel.php";
+    require_once "models_admin/CategoryModel.php";
+    require_once "models_admin/ProductModel.php";
+    require_once "models_admin/CustomerModel.php";
+    require_once "models_admin/OrderModel.php";
+    require_once "models_admin/PostModel.php";
+    require_once "models_admin/CommentModel.php";
+    require_once "models_admin/WarehousemModel.php";
+
+    require_once "components/head.php";
+    require_once "components/header.php";
+    
+    
+
+    if(!isset($_GET['quanli'])) {
+        require_once "home.php";
+    }else {
+        switch ($_GET['quanli']) {
+            case 'danh-sach-san-pham':
+                require_once "san-pham/list.php";         
+                break;
+            case 'them-san-pham':
+                         
+                require_once "san-pham/add.php";   
+                break;
+            case 'cap-nhat-san-pham':
+                require_once "san-pham/edit.php";   
+                break;
+            case 'thung-rac-san-pham':
+                require_once "san-pham/recycle-bin.php";   
+                break;
+            // Danh mục
+            case 'danh-sach-danh-muc':
+                
+                require_once "danh-muc/list.php";         
+                break;
+            case 'them-danh-muc':
+                         
+                require_once "danh-muc/add.php";   
+                break;
+            case 'cap-nhat-danh-muc':
+                
+                require_once "danh-muc/edit.php";   
+                
+                break;
+            // Đơn hàng    
+            
+            case 'danh-sach-don-hang':
+
+                require_once "don-hang/list.php";         
+                break;
+            case 'danh-sach-don-cho':
+
+                require_once "don-hang/unconfirmed.php";         
+                break;
+            case 'cap-nhat-don-hang':
+
+                require_once "don-hang/edit.php";         
+                break;
+            case 'in-hoa-don':
+                require_once "don-hang/hoadon.php";
+                break;     
+            // Bài viết
+            case 'danh-sach-bai-viet':
+
+                require_once "bai-viet/list.php";         
+                break;
+            case 'them-bai-viet':
+
+                require_once "bai-viet/add.php";         
+                break;
+            case 'cap-nhat-bai-viet':
+                require_once "bai-viet/edit.php";         
+                break;    
+            case 'danh-muc-bai-viet':
+
+                require_once "bai-viet/category.php";         
+                break;
+            case 'cap-nhat-danh-muc-bai-viet':
+
+                require_once "bai-viet/edit_catgory.php";         
+                break;
+            //Tài khoản
+            case 'dang-xuat':
+                unset($_SESSION['user_admin']);
+                header("Location: login.php");
+                break;
+                
+            
+            // Quản lí nhân viên và khách hàng
+            //Nhân viên
+            case 'danh-sach-nhan-vien':
+
+                require_once "thanh-vien/list_nv.php";         
+                break; 
+            case 'them-tai-khoan-nv':
+                require_once "thanh-vien/add_nv.php";         
+                break;
+            case 'sua-tai-khoan-nv':
+                require_once "thanh-vien/edit_nv.php";         
+                break;
 
 
+            //Khách hàng
+            case 'danh-sach-khach-hang':
 
-ob_end_flush();
+                require_once "thanh-vien/list_kh.php";         
+                break; 
+            case 'them-tai-khoan-kh':
+                require_once "thanh-vien/add_kh.php";         
+                break;
+            case 'sua-tai-khoan-kh':
+                require_once "thanh-vien/edit_kh.php";         
+                break;      
+            
+            // Bình luận  
+            case 'binh-luan':
+                require_once "binh-luan/list.php";         
+                break; 
+            case 'chi-tiet-binh-luan':
+                require_once "binh-luan/edit.php";         
+                break;
+            // Thống kê  
+            case 'thong-ke-san-pham':
+                require_once "thong-ke/products.php";         
+                break; 
+            case 'thong-ke-don-hang':
+                require_once "thong-ke/orders.php";         
+                break;
+            case 'bieu-do-luot-ban':
+                require_once "thong-ke/chart-order.php";         
+                break;
+            case 'top-luot-ban':
+                require_once "thong-ke/top-orders.php";         
+                break;
+            case 'luot-ban-theo-ngay':
+                require_once "thong-ke/chart-order-date.php";         
+                break;
+            case 'xuat-exel':
+                require_once "export_exel/export_orders.php";         
+                break;
+            case 'kho-hang2':
+                require_once "kho-hang/list.php";         
+                break;
+            case 'kho-hang':
+                require_once "kho-hang/danhsach.php";         
+                break;
+            case 'them-hoa-don':
+                require_once "kho-hang/add.php";         
+                break;
+            
+
+            default:
+                require_once "components/404.php";
+                break;
+        }
+    }
+
+    require_once "components/footer.php";
+
+
+    
+    ob_end_flush();
 ?>
-<br>

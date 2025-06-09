@@ -1,127 +1,110 @@
+
 <body>
 
-    <?php
-    if (isset($_SESSION['user'])) {
-        $user_id = $_SESSION['user']['id'];
-        $count_carts = count($CartModel->count_cart($user_id));
-    }
 
-    ?>
+    <div class="container-xxl position-relative bg-white d-flex p-0">
 
-    <!-- Offcanvas Menu Begin -->
-    <div class="offcanvas-menu-overlay"></div>
-    <div class="offcanvas-menu-wrapper">
-        <div class="offcanvas__close">+</div>
-        <ul class="offcanvas__widget">
-            <li><span class="icon_search search-switch"></span></li>
-            <li><a href="#"><span class="icon_heart_alt"></span>
-                    <div class="tip">2</div>
-                </a></li>
-            <li><a href="#"><span class="icon_bag_alt"></span>
-                    <div class="tip">2</div>
-                </a></li>
-        </ul>
-        <div class="offcanvas__logo">
-            <a href="index.php"><img src="upload/logo.jpg" alt=""></a>
-        </div>
-        <div id="mobile-menu-wrap"></div>
 
-        <?php if (isset($_SESSION['user'])) { ?>
-            <div class="offcanvas__auth acount">
-                <a href="index.php?url=thong-tin-tai-khoan">
-                    <img src="upload/<?= $_SESSION['user']['image'] ? $_SESSION['user']['image'] : 'upload/user-default.png' ?>" alt="">
-                    <?= $_SESSION['user']['username'] ?>
+
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3">
+            <nav class="navbar bg-light navbar-light">
+                <a href="index.php" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary"><i class="fa fa fa-user me-2"></i>TAILOR SHOP</h3>
                 </a>
-            </div>
-        <?php
-        } else {
-        ?>
-            <div class="offcanvas__auth">
-                <a href="index.php?url=dang-nhap">Đăng nhập</a>
-                <a href="index.php?url=dang-ky">Đăng ký</a>
-            </div>
-        <?php
-        }
-        ?>
 
+                <div class="navbar-nav w-100">
+                    <!-- <a href="index.php" class="nav-item nav-link active"><i
+                            class="fa fa-tachometer-alt me-2"></i>Dashboard</a> -->
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                                class="fa fa-shopping-basket me-2"></i>Đơn hàng</a>
+                        <div class="dropdown-menu bg-transparent border-0">
 
-    </div>
-    <!-- Offcanvas Menu End -->
+                            <a href="index.php?quanli=danh-sach-don-hang" class="dropdown-item">Tất cả đơn hàng</a>
+                            <a href="danh-sach-don-cho" class="dropdown-item">Đơn chờ xác nhận</a>
 
-    <!-- Header Section Begin -->
-    <header class="header" style="background-color:rgb(13, 65, 121);">
-        <div class="container" >
-            <div class="row">
-                <div class="col-xl-3 col-lg-2">
-                    <div class="header__logo">
-                        <a href="index.php"><img style="max-height: 50px" src="" alt=""></a>
+                        </div>
                     </div>
-                </div>  
-                <div class="col-xl-6 col-lg-7">
-                    <nav class="header__menu">
-                        <ul>
-                            <li><a href="index.php" style="color: white;">TRANG CHỦ</a></li>
 
-                            <li><a href="index.php?url=cua-hang" style="color: white;">Cửa hàng</a></li>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown"><i
+                                class="fa fa-th me-2"></i>Danh mục</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="index.php?quanli=them-danh-muc" class="dropdown-item">Thêm mới</a>
+                            <a href="index.php?quanli=danh-sach-danh-muc" class="dropdown-item">Tất cả</a>
 
-                            <li><a href="index.php?url=doi-tra" style="color: white;">đổi trả</a></li>
-
-                            <li><a href="index.php?url=lien-he" style="color: white;">LIÊN HỆ</a></li>
-
-                            <li><a href="#"><i class="fas fa-shopping-cart" style="color: white;"></i></a>
-                                <ul class="dropdown">
-                                    <li><a href="index.php?url=gio-hang">Giỏ hàng</a></li>
-                                    <li><a href="index.php?url=thanh-toan">Thanh toán</a></li>
-                                    <li><a href="index.php?url=don-hang">Đơn hàng</a></li>
-                                </ul>
-                            </li>
-
-
-
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-lg-3">
-                    <div class="header__right">
-
-
-                        <?php if (isset($_SESSION['user'])) { ?>
-                            <div class="header__right__auth acount">
-                                <a href="index.php?url=thong-tin-tai-khoan">
-                                    <img src="upload/<?= $_SESSION['user']['image'] ?>" alt=""><?= $_SESSION['user']['username'] ?>
-                                </a>
-
-                            </div>
-                        <?php
-                        } else {
-                        ?>
-                            <div class="header__right__auth">
-                                <a href="index.php?url=dang-nhap" style="color: white;">Đăng nhập</a>
-                                <a href="index.php?url=dang-ky" style="color: white;">Đăng ký</a>
-                            </div>
-                        <?php
-                        }
-                        ?>
-
-                        <?php if (isset($_SESSION['user'])) { ?>
-                            <ul class="header__right__widget">
-                                <li><span class="icon_search search-switch"></span></li>
-
-                            </ul>
-                        <?php } else { ?>
-
-                            <ul class="header__right__widget">
-                                <li><span class="icon_search search-switch" style="color: white;"></span></li>
-
-                            </ul>
-                        <?php } ?>
+                        </div>
                     </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                                class="fas fa-box me-2"></i>Sản phẩm</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="index.php?quanli=them-san-pham" class="dropdown-item">Thêm mới</a>
+                            <a href="index.php?quanli=danh-sach-san-pham" class="dropdown-item">Tất cả</a>
+
+                        </div>
+                    </div>
+
+
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                                class="fas fa-chart-bar me-2"></i> Thống kê</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="thong-ke-san-pham" class="dropdown-item">Sản phẩm - danh mục</a>
+                            <a href="thong-ke-don-hang" class="dropdown-item">Đơn hàng</a>
+                        </div>
+                    </div>
+
+
+                    <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                    class="fas fa-box me-2"></i> Thành viên </a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="index.php?quanli=danh-sach-nhan-vien" class="dropdown-item">Quản lý nhân viên</a>
+                            <a href="index.php?quanli=danh-sach-khach-hang 
+                                " class="dropdown-item">Quản lý khách hàng</a> 
+                            </div>
+                    </div>       
+
+                    <a href="index.php?quanli=binh-luan" class="nav-item nav-link"><i
+                            class="fas fa-comment me-2"></i>Bình luận</a>
+
                 </div>
-            </div>
-            <div class="canvas__open">
-                <i class="fa fa-bars"></i>
-            </div>
+            </nav>
         </div>
-    </header>
-    <!-- Header Section End -->
-    
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+
+                <div class="navbar-nav align-items-center ms-auto">
+
+
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="rounded-circle me-lg-2"
+                                src="<?= isset($_SESSION['user']['image']) && !empty($_SESSION['user']['image']) ? '../upload/' . $_SESSION['user']['image'] : 'public_admin/img/user-default.png' ?>"
+                                alt="User Image"
+                                style="width: 40px; height: 40px;"> 
+                                <span class="d-none d-lg-inline-flex"><?= isset($_SESSION['user']['username']) ? $_SESSION['user']['username'] : 'ADMIN' ?></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-white border-1 rounded-0 rounded-bottom m-0">
+                            <a href="../index.php" class="dropdown-item">Trang khách hàng</a>
+                            <a href="index.php?quanli=dang-xuat" class="dropdown-item">Đăng xuất</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+
+            <!-- Content start -->
